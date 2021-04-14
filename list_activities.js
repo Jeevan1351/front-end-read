@@ -22,40 +22,36 @@ function link_student_id(email_ID, callback, superman){
         }
     }
 }
-function days_worked(stu_timestamps_people_id,student_ID, total_days) {
-    function days_worked(stu_timestamps_people_id,student_ID,total_days) {
-        all_data = [];
-        days=[];
-        var days_work = [];
-        stu_timestamp_people_id=stu_timestamps_people_id.split("*&*");
-        stu_timestamp_people_id.forEach(element => {
-            stu_ID=element.split('/')[1];
-            timestamp_single=element.split('/')[0];
-            if(stu_ID == student_ID) {
-                date=timestamp_single.split('T')[0];
-                days.push(date);
-            }
-        });
-        var days_set=new Set(days);
-        //console.log("Days worked: "+days_set.size);
-        days_work.push(days_set.size);
-        let days_set_array = [];
-        days_set.forEach(v => days_set_array.push(v));
-        //console.log("Dates: "+days_set_array);
-        total_days=total_days+days_set.size;
-        console.log("ARRAY OF DAYS "+days_set_array);
-        //all_data.push(days.work, days_set_array, total_days);
-        // all_data.push(days_set_array);
-        // all_data.push(total_days);
-        return total_days;
-    }
 
+function days_worked(stu_timestamps_people_id,student_ID) {
+    var all_data = [];
+    var days=[];
+    var days_work = 0;
+    var stu_timestamp_people_id=stu_timestamps_people_id.split("*&*");
+    stu_timestamp_people_id.forEach(element => {
+        var stu_ID=element.split('/')[1];
+        var timestamp_single=element.split('/')[0];
+        if(stu_ID == student_ID) {
+            var date=timestamp_single.split('T')[0];
+            days.push(date);
+        }
+    });
+    var days_set=new Set(days);
+    days_work = days_set.size;
+    let days_set_array = [];
+    days_set.forEach(v => days_set_array.push(v));
+    console.log("ARRAY OF DAYS "+days_set_array);
+    console.log("No. of days ",days_work);
+    all_data.push(days_work);
+    all_data.push(days_set_array);
+    return all_data;
 }
+
 function student_find_activities(student_ID, batman) {
     var total_days=0;
     var array = [];
     var data_p_array = [];
-    //console.log("Student ID: "+student_ID+'\n');
+    var total_days_1 = [];
     var lrs = new LineReaderSync("drive_activitiy_files.txt"); 
     while(true){
             var line = lrs.readline();
@@ -63,20 +59,20 @@ function student_find_activities(student_ID, batman) {
                 break;
             }
             else{
-                //var stu_doc_id=line.split('***')[0];
-                //var stu_email_id=line.split('***')[1];
                 var stu_doc_name = line.split('***')[2];
                 var stu_timestamps_people_id = line.split('***')[3];
                 if(line.includes(student_ID)) {
-                    array.push(stu_doc_name)
-                    total_days_1= batman(stu_timestamps_people_id,student_ID, total_days);
-                    //console.log(total_days_1);
+                    //array.push(stu_doc_name)
+                    total_days_1= batman(stu_timestamps_people_id,student_ID);
+                    total_days = total_days + total_days_1[0];
+                    total_days_1.push(stu_doc_name);
                     data_p_array.push(total_days_1);
                 }
             }
 
     }
-    data_p_array.push(array);
+    data_p_array.unshift(total_days);
+    console.log(data_p_array);
     return data_p_array;
 }
 module.exports = { lk:link_student_id, sfa : student_find_activities, dw : days_worked}; 
