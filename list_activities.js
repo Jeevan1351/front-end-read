@@ -11,12 +11,9 @@ function link_student_id(email_ID, callback, superman) {
     }
     var email_ID_file = line.split(",")[1].trim();
     var student_id = line.split(",")[0];
-    //console.log("***"+email_ID+"***"+line.split(',')[1].trim()+"***\n");
     if (email_ID.trim() == email_ID_file) {
-      console.log("H1");
+      console.log("Student ID: " + student_id);
       var d = callback(student_id, superman);
-      //console.log(d);
-      console.log("SUCCESS!\n");
       return d;
     }
   }
@@ -39,8 +36,6 @@ function days_worked(stu_timestamps_people_id, student_ID) {
   days_work = days_set.size;
   let days_set_array = [];
   days_set.forEach((v) => days_set_array.push(v));
-  //console.log("ARRAY OF DAYS " + days_set_array);
-  //console.log("No. of days ", days_work);
   all_data.push(days_work);
   all_data.push(days_set_array);
   return all_data;
@@ -48,6 +43,7 @@ function days_worked(stu_timestamps_people_id, student_ID) {
 
 function student_find_activities(student_ID, batman) {
   var total_days = 0;
+  var tda = [];
   var data_p_array = [];
   var total_days_1 = [];
   var lrs = new LineReaderSync("drive_activitiy_files.txt");
@@ -59,7 +55,6 @@ function student_find_activities(student_ID, batman) {
       var stu_doc_name = line.split("***")[2];
       var stu_timestamps_people_id = line.split("***")[3];
       if (line.includes(student_ID)) {
-        //array.push(stu_doc_name)
         total_days_1 = batman(stu_timestamps_people_id, student_ID);
         total_days = total_days + total_days_1[0];
         total_days_1.push(stu_doc_name);
@@ -67,8 +62,14 @@ function student_find_activities(student_ID, batman) {
       }
     }
   }
-  data_p_array.unshift(total_days);
-  //console.log(data_p_array);
+  for (var i=0; i< data_p_array.length; i++){
+    for(var j=0; j< data_p_array[i][1].length; j++){
+      tda.push(data_p_array[i][1][j]);
+    }
+  }
+  var set_dates = new Set(tda);
+  console.log("Dates worked: ",set_dates);
+  data_p_array.unshift(set_dates.size);
   return data_p_array;
 }
 module.exports = {

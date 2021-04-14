@@ -18,18 +18,14 @@ app.get("/", (req, res) => {
 
 app.post("/read", (req, res) => {
   var a = req.body.student_email;
-  //var d = get_data.lk(a)
-  // d.then(function(value){
-  //console.log("This index.js ",value, d);
   var data = get_data.lk(a, get_data.sfa, get_data.dw);
-  //console.log(data);
   var names = [];
   var days = [];
   for (var i = 1; i < data.length; i++) {
     names.push(data[i][2]);
     days.push(data[i][0]);
   }
-  console.log(days, names);
+  //console.log(days, names);
   res.render("read", {
     total_days: data[0],
     data: days,
